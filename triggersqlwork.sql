@@ -279,3 +279,48 @@ insert into insert_trigger_details values ('user with id ' + cast(@id as varchar
 end
  DELETE FROM insert_trigger_details where id =1
  select * from insert_trigger_details;
+
+ -- instead of triggers--
+ create trigger tr_instead_insert on employees
+ instead of insert
+ as
+ begin 'someone trying to insert the value is the employees table'
+ end 
+
+ 	-- creating audit table for insteadoff--
+
+create table instead_of_audit(
+id int primary key identity,
+auditInfo varchar(60)
+)
+
+
+INSERT INTO Employees (FirstName, LastName, DepartmentID,gender, Salary)
+VALUES
+ 
+	  ('Rabi', 'Imrani', 2,'F', 70000.00)
+
+	select * from inserted
+
+	create trigger tr_audit_inserted on employees
+instead of insert
+as
+begin
+declare @id int, @name varchar(50)
+select @id= EmployeeID,@name = FirstName from inserted
+insert into instead_of_audit values ('user with id ' + cast(@id as varchar(50)) + 'with name ' + @name + 'is inserted in the table')
+end
+
+create trigger instead_audit_deleted on employees
+instead of delete
+as
+begin
+declare @id int, @name varchar(50)
+select @id= EmployeeID,@name = FirstName from deleted
+insert into instead_of_audit values ('user with id ' + cast(@id as varchar(50)) + 'with name ' + @name + 'is deleted in the table')
+end
+		 DELETE from Employees where EmployeeID= 53
+select * from instead_of_audit;
+select * from Employees;
+
+sp_helptext tr_audit_inserted;
