@@ -324,3 +324,67 @@ select * from instead_of_audit;
 select * from Employees;
 
 sp_helptext tr_audit_inserted;
+--DDL TRIGGERS
+
+create trigger tr_create on database
+for CREATE_TABLE
+as
+begin
+print 'someone trying to create table'
+end
+-- to check command 
+create table std(id int)
+ 
+ -- for alter
+ create trigger tr_alter on database
+for ALTER_TABLE
+as
+begin
+print 'you cannot alter tha table'
+end
+alter table  departments drop column departmentName
+
+-- for drop table
+create trigger tr_drop on database
+for DROP_TABLE
+as
+begin
+print 'someone trying to drop the table'
+end
+--command for drop the table
+drop table Departments
+
+--ddl trigger on server
+--to create table
+create trigger tr_onServer on ALL server
+for CREATE_TABLE
+as
+begin
+print 'you cannot create the database on current server'
+end
+create table SERVER(id int)
+--to alter table
+create trigger tr_Server on ALL server
+for ALTER_TABLE
+as
+begin
+print 'you cannot CANNOT alter the table on current server'
+end
+alter table Employees drop column LastName
+--to drop table
+
+create trigger tr_ondropServer on ALL server
+for DROP_TABLE
+as
+begin
+print 'you cannot drop the table on current server'
+end
+drop table HR_Emp
+--to create database
+create trigger tr_databaseServer on ALL server
+for CREATE_DATABASE
+as
+begin
+print 'you cannot create the database on current server'
+end
+ create database trigger_1
